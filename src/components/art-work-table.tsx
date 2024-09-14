@@ -9,7 +9,7 @@ import { TbMenuOrder } from "react-icons/tb";
 
 const ArtworkTable: React.FC = () => {
   const [artworks, setArtworks] = useState<Table[]>([]);
-  const [selectedArtworks, setSelectedArtworks] = useState<Record<number, Table>>({});
+  const [selectedArtworks, setSelectedArtworks] = useState<{ [key: number]: Table }>({});
   const [loading, setLoading] = useState<boolean>(true);
   const [totalRecords, setTotalRecords] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -84,18 +84,18 @@ const ArtworkTable: React.FC = () => {
         loading={loading}
         onPage={onPageChange}
         selection={Object.values(selectedArtworks)}
-        onSelectionChange={(e) => setSelectedArtworks(e.value.reduce((acc, artwork) => {
-          acc[artwork.id] = artwork;
-          return acc;
-        }, {}))}
+        onSelectionChange={(e) => setSelectedArtworks(
+          e.value.reduce((acc: { [key: number]: Table }, artwork: Table) => {
+            acc[artwork.id] = artwork;
+            return acc;
+          }, {})
+        )}
         dataKey="id"
         rowHover
         selectionMode="multiple"
       >
         <Column selectionMode="multiple" headerStyle={{ width: '3em' }}></Column>
-
         <Column header={selectRowsHeader} bodyStyle={{ textAlign: 'center' }}></Column>
-
         <Column field="title" header="Title"></Column>
         <Column field="place_of_origin" header="Place of Origin"></Column>
         <Column field="artist_display" header="Artist"></Column>
